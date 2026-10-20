@@ -5,7 +5,7 @@
 <meta name="theme-color" content="#101828"><title>Hello Work</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=10">
+<link rel="stylesheet" href="styles.css?v=11">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
 </head>
@@ -102,6 +102,18 @@
      <p id="checklistNotice" class="project-form-notice" role="status"></p>
      <div id="projectChecklist" class="project-checklist"><div class="projects-loading">Loading checklist…</div></div>
     </section>
+
+    <section class="project-detail-panel project-chat-panel">
+     <div class="project-panel-heading"><div><h3>Project chat &amp; tasks</h3><p>Keep the conversation with the project. Turn any message into an open task so it stays visible until completed.</p></div><span id="openTaskCount" class="checklist-progress">0 open</span></div>
+     <div class="chat-task-filter"><button id="chatAllBtn" type="button" class="project-filter active">All activity</button><button id="chatTasksBtn" type="button" class="project-filter">Open tasks</button></div>
+     <div id="projectChatMessages" class="project-chat-messages"><div class="projects-loading">Loading project conversation…</div></div>
+     <form id="projectChatForm" class="project-chat-form">
+      <label class="sales-search-label" for="projectChatInput">Message the project team</label>
+      <textarea id="projectChatInput" rows="3" maxlength="5000" placeholder="Write a project update, question, or next step…" required></textarea>
+      <div class="chat-compose-bottom"><label class="chat-task-toggle"><input id="projectChatIsTask" type="checkbox"><span><strong>Make this an open task</strong><small>Keep it open until someone marks it complete.</small></span></label><button id="sendProjectMessage" class="primary" type="submit">Send message <span>→</span></button></div>
+      <p id="projectChatNotice" class="project-form-notice" role="status"></p>
+     </form>
+    </section>
    </div>
    <aside class="project-detail-side">
     <section class="project-detail-panel">
@@ -123,5 +135,5 @@
     <footer><span>© 2026 Hello Work</span><span>Built for better workdays <b>✳</b></span></footer>
   </main>
 </div>
-<script src="app.js?v=13"></script>
+<script src="app.js?v=14"></script>
 </body></html>
