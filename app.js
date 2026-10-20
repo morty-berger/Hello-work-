@@ -1,6 +1,6 @@
 (() => {
  const $ = id => document.getElementById(id);
- let mode = "signin", client = null, currentUser = null;
+ let mode = "signin", client = null, currentUser = null, currentProfile = null;
  const config = window.HELLO_WORK_CONFIG || {};
  const configured = config.supabaseUrl && config.supabaseAnonKey && !config.supabaseUrl.includes("YOUR_") && !config.supabaseAnonKey.includes("YOUR_");
  if (configured && window.supabase) client = window.supabase.createClient(config.supabaseUrl, config.supabaseAnonKey);
@@ -16,12 +16,24 @@
   $("resetBtn").classList.toggle("hidden", mode !== "signin"); note("");
  }
  function showApp(user, profile) {
-  currentUser = user; $("authPanel").classList.add("hidden"); $("appPanel").classList.remove("hidden");
-  $("welcomeTitle").textContent = "You're in.";
+  currentUser = user;
+  currentProfile = profile;
+  $("authPanel").classList.add("hidden");
+  $("appPanel").classList.remove("hidden");
   const label = profile?.full_name || user.email?.split("@")[0] || "there";
   $("welcomeTitle").textContent = "Hi, " + label + ".";
-  $("adminPanel").classList.toggle("hidden", profile?.role !== "admin");
-  if (profile?.role === "admin") loadUsers();
+  const isAdmin = profile?.role === "admin";
+  $("adminMenu").classList.toggle("hidden", !isAdmin);
+  if (!isAdmin) showHome();
+ }
+ function showHome() {
+  $("dashboardHome").classList.remove("hidden");
+  $("manageUsersView").classList.add("hidden");
+ }
+ function showManageUsers() {
+  $("dashboardHome").classList.add("hidden");
+  $("manageUsersView").classList.remove("hidden");
+  if (currentProfile?.role === "admin") loadUsers();
  }
  async function getProfile(user) {
   if (!client) return null;
@@ -30,17 +42,41 @@
   return data;
  }
  async function refreshSession(session) {
-  if (!session?.user) { currentUser=null; $("appPanel").classList.add("hidden"); $("authPanel").classList.remove("hidden"); return; }
+  if (!session?.user) {
+   currentUser=null; currentProfile=null;
+   $("appPanel").classList.add("hidden"); $("authPanel").classList.remove("hidden");
+   $("manageUsersView").classList.add("hidden"); $("dashboardHome").classList.remove("hidden");
+   $("adminMenu").classList.add("hidden"); return;
+  }
   showApp(session.user, await getProfile(session.user));
  }
  async function loadUsers() {
-  const target=$("userList"); target.textContent="Loading users…";
-  const {data,error}=await client.from("profiles").select("id,full_name,role,created_at").order("created_at",{ascending:false}).limit(100);
-  if(error){target.textContent="Could not load users. Check the database policies.";return;}
-  target.innerHTML="";
-  (data||[]).forEach(u=>{const row=document.createElement("div");row.className="user-row";const name=document.createElement("span");name.textContent=u.full_name||"Workspace member";const role=document.createElement("span");role.className="role";role.textContent=u.role||"member";row.append(name,role);target.append(row);});
-  if(!data?.length) target.textContent="No user profiles yet.";
- }
+  const target=$("userTableBody"), count=$("userCount"), notice=$("usersNotice");
+  target.innerHTML='<tr><td colspan="4" class="table-message">Loading registered users…</td></tr>';
+  count.textContent="…"; notice.textContent="";
+  const {data,error}=await client.rpc("admin_list_hello_work_users");
+  if(error) {
+   console.error(error);
+   target.innerHTML='<tr><td colspan="4" class="table-message">Could not load users. Please check the admin database setup.</td></tr>';
+   count.textContent="—"; notice.textContent=error.message || "Unable to load users."; return;
+  }
+  const users=data||[]; count.textContent=String(users.length); target.innerHTML="";
+  users.forEach(u=>{
+   const row=document.createElement("tr");
+   const userCell=document.createElement("td"), userName=document.createElement("div"), userMeta=document.createElement("div");
+   userName.className="table-user-name"; userName.textContent=u.full_name||"New member";
+   userMeta.className="table-user-meta"; userMeta.textContent="Hello Work account";
+   userCell.append(userName,userMeta);
+   const emailCell=document.createElement("td"); emailCell.className="email-cell"; emailCell.textContent=u.email||"—";
+   const roleCell=document.createElement("td"), role=document.createElement("span"); role.className="role-chip "+(u.role==="admin"?"role-admin":""); role.textContent=u.role||"member"; roleCell.append(role);
+   const joinedCell=document.createElement("td"); joinedCell.className="date-cell";
+   joinedCell.textContent=u.created_at?new Date(u.created_at).toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"}):"—";
+   row.append(userCell,emailCell,roleCell,joinedCell); target.append(row);
+  });
+  if(!users.length) target.innerHTML='<tr><td colspan="4" class="table-message">No accounts have signed up yet.</td></tr>';
+ } $("adminMenuToggle").addEventListener("click",()=>{ const items=$("adminMenuItems"), opening=items.classList.contains("hidden"); items.classList.toggle("hidden",!opening); $("adminMenuToggle").setAttribute("aria-expanded",String(opening)); });
+ $("manageUsersBtn").addEventListener("click",showManageUsers);
+ $("refreshUsersBtn").addEventListener("click",loadUsers);
  $("signInTab").addEventListener("click",()=>setMode("signin"));
  $("signUpTab").addEventListener("click",()=>setMode("signup"));
  $("authForm").addEventListener("submit",async e=>{
