@@ -66,10 +66,10 @@
    const userCell=document.createElement("td"), userName=document.createElement("div"), userMeta=document.createElement("div");
    userName.className="table-user-name"; userName.textContent=u.full_name||"New member";
    userMeta.className="table-user-meta"; userMeta.textContent="Hello Work account";
-   userCell.append(userName,userMeta);
-   const emailCell=document.createElement("td"); emailCell.className="email-cell"; emailCell.textContent=u.email||"—";
-   const roleCell=document.createElement("td"), role=document.createElement("span"); role.className="role-chip "+(u.role==="admin"?"role-admin":""); role.textContent=u.role||"member"; roleCell.append(role);
-   const joinedCell=document.createElement("td"); joinedCell.className="date-cell";
+   userCell.dataset.label="User"; userCell.append(userName,userMeta);
+   const emailCell=document.createElement("td"); emailCell.className="email-cell"; emailCell.dataset.label="Email"; emailCell.textContent=u.email||"—";
+   const roleCell=document.createElement("td"), role=document.createElement("span"); roleCell.dataset.label="Role"; role.className="role-chip "+(u.role==="admin"?"role-admin":""); role.textContent=u.role||"member"; roleCell.append(role);
+   const joinedCell=document.createElement("td"); joinedCell.dataset.label="Joined"; joinedCell.className="date-cell";
    joinedCell.textContent=u.created_at?new Date(u.created_at).toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"}):"—";
    row.append(userCell,emailCell,roleCell,joinedCell); target.append(row);
   });
