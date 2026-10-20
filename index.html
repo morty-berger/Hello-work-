@@ -76,29 +76,51 @@
   <div id="projectsNotice" class="projects-notice" role="status" aria-live="polite"></div>
   <div id="salesProjectList" class="sales-project-list"><div class="projects-loading">Loading sales projects…</div></div>
  </section>
- <section id="salesProjectsView" class="sales-projects-view hidden">
-  <div class="sales-heading"><div><button id="salesBackBtn" class="back-link" type="button">← All departments</button><div class="eyebrow">DEPARTMENT 01 · SALES</div><h2>Sales projects</h2><p>Every opportunity is a project. Move it through the pipeline as it progresses.</p></div><button id="newProjectBtn" class="primary new-project-btn" type="button"><span>＋</span> New project</button></div>
-  <div id="salesStats" class="sales-stats"></div>
-  <div class="sales-toolbar"><label class="sales-search-label" for="projectSearch">Search projects</label><input id="projectSearch" class="project-search" type="search" placeholder="Project or customer name…"><div id="projectFilters" class="project-filters" aria-label="Filter projects by status"></div></div>
-  <form id="newProjectForm" class="new-project-form hidden">
-   <div class="new-project-form-heading"><div><h3>Create a project</h3><p>Start every new opportunity as a lead.</p></div><button id="cancelNewProject" class="icon-button" type="button" aria-label="Cancel">×</button></div>
-   <div class="project-form-grid">
-    <div class="project-field"><label for="projectTitle">Project name *</label><input id="projectTitle" name="title" maxlength="160" placeholder="e.g. 123 Main Street HVAC" required></div>
-    <div class="project-field"><label for="projectCustomer">Customer / company</label><input id="projectCustomer" name="customer" placeholder="Customer or GC name"></div>
-    <div class="project-field"><label for="projectEmail">Contact email</label><input id="projectEmail" name="email" type="email" placeholder="contact@company.com"></div>
-    <div class="project-field"><label for="projectValue">Estimated value ($)</label><input id="projectValue" name="value" type="number" min="0" step="0.01" placeholder="0.00"></div>
-    <div class="project-field project-field-wide"><label for="projectNotes">Notes</label><textarea id="projectNotes" name="notes" rows="3" placeholder="Scope, next steps, bid date, or other details"></textarea></div>
+ <section id="projectDetailView" class="project-detail-view hidden">
+  <button id="projectDetailBack" class="back-link" type="button">← Back to projects</button>
+  <div class="project-detail-heading"><div><div class="eyebrow">SHARED PROJECT WORKSPACE</div><h2 id="detailProjectTitle">Project details</h2><p id="detailProjectSubtitle">Project information and team checklist.</p></div><span id="detailStatusBadge" class="detail-status-badge">Lead</span></div>
+  <div class="project-detail-grid">
+   <div class="project-detail-main">
+    <section class="project-detail-panel">
+     <div class="project-panel-heading"><div><h3>Project information</h3><p>These details stay with the project in every department.</p></div></div>
+     <form id="editProjectForm">
+      <div class="project-form-grid">
+       <div class="project-field"><label for="detailTitle">Project name *</label><input id="detailTitle" required maxlength="160"></div>
+       <div class="project-field"><label for="detailCustomer">Customer / company</label><input id="detailCustomer"></div>
+       <div class="project-field"><label for="detailEmail">Contact email</label><input id="detailEmail" type="email"></div>
+       <div class="project-field"><label for="detailValue">Estimated value ($)</label><input id="detailValue" type="number" min="0" step="0.01"></div>
+       <div class="project-field project-field-wide"><label for="detailNotes">Project notes</label><textarea id="detailNotes" rows="4"></textarea></div>
+      </div>
+      <p id="detailSaveNotice" class="project-form-notice" role="status"></p>
+      <div class="project-form-actions"><button id="saveProjectDetails" class="primary" type="submit">Save project details</button></div>
+     </form>
+    </section>
+    <section class="project-detail-panel">
+     <div class="project-panel-heading"><div><h3>Project checklist</h3><p>Keep track of next steps. Checklist items stay attached to this project.</p></div><span id="checklistProgress" class="checklist-progress">0 / 0</span></div>
+     <form id="addChecklistForm" class="add-checklist-form"><label class="sales-search-label" for="newChecklistItem">New checklist item</label><input id="newChecklistItem" maxlength="240" placeholder="e.g. Send proposal to customer" required><button id="addChecklistBtn" class="primary" type="submit">＋ Add</button></form>
+     <p id="checklistNotice" class="project-form-notice" role="status"></p>
+     <div id="projectChecklist" class="project-checklist"><div class="projects-loading">Loading checklist…</div></div>
+    </section>
    </div>
-   <p id="projectFormNotice" class="project-form-notice" role="status"></p>
-   <div class="project-form-actions"><button id="cancelNewProjectBottom" class="outline" type="button">Cancel</button><button id="saveNewProject" class="primary" type="submit">Create lead <span>→</span></button></div>
-  </form>
-  <div id="projectsNotice" class="projects-notice" role="status" aria-live="polite"></div>
-  <div id="salesProjectList" class="sales-project-list"><div class="projects-loading">Loading sales projects…</div></div>
+   <aside class="project-detail-side">
+    <section class="project-detail-panel">
+     <div class="project-panel-heading"><div><h3>Department</h3><p>Move this same project between teams without making a copy.</p></div></div>
+     <label for="projectDepartmentSelect">Current department</label>
+     <select id="projectDepartmentSelect" class="department-select"><option value="sales">Sales</option><option value="operations">Operations</option><option value="finance">Finance</option></select>
+     <p id="departmentMoveNotice" class="project-form-notice" role="status"></p>
+     <div class="detail-side-note"><span>↗</span><p>The project keeps its ID, details, status and checklist when you move it.</p></div>
+    </section>
+    <section class="project-detail-panel">
+     <div class="project-panel-heading"><div><h3>Project status</h3><p>Keep the pipeline up to date.</p></div></div>
+     <label for="detailStatusSelect">Status</label><select id="detailStatusSelect" class="department-select"></select>
+    </section>
+   </aside>
+  </div>
  </section>
  <section id="manageUsersView" class="manage-users hidden"><div class="section-heading"><div><div class="eyebrow">ADMIN / USERS</div><h2>Manage users</h2><p>Everyone who has created a Hello Work account.</p></div><button id="refreshUsersBtn" class="outline" type="button">↻ Refresh</button></div><div class="user-summary"><span class="summary-icon">♙</span><div><strong id="userCount">—</strong><span>Registered users</span></div></div><div class="user-table-wrap"><table class="user-table"><thead><tr><th>User</th><th>Email</th><th>Role</th><th>Joined</th></tr></thead><tbody id="userTableBody"><tr><td colspan="4" class="table-message">Sign in as an administrator to view users.</td></tr></tbody></table></div><p id="usersNotice" class="users-notice" role="status" aria-live="polite"></p></section>
     </section>
     <footer><span>© 2026 Hello Work</span><span>Built for better workdays <b>✳</b></span></footer>
   </main>
 </div>
-<script src="app.js?v=8"></script>
+<script src="app.js?v=9"></script>
 </body></html>
