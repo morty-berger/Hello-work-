@@ -68,3 +68,34 @@ with check (auth.uid() = id);
 
 -- To promote your first account, run this in the trusted SQL Editor after signing up:
 -- update public.profiles set role = 'admin' where id = 'YOUR-USER-UUID';
+
+ 
+-- Admin-only directory endpoint. It returns the registered account emails and profile details.
+-- The function checks administrator status before reading auth.users.
+create or replace function public.admin_list_hello_work_users()
+returns table (
+  user_id uuid,
+  email text,
+  full_name text,
+  role text,
+  created_at timestamptz
+)
+language plpgsql
+security definer
+set search_path = ''
+as $$
+begin
+  if not private.is_hello_work_admin() then
+    raise exception 'Administrator access required' using errcode = '42501';
+  end if;
+  return query
+    select u.id, u.email::text, coalesce(p.full_name, ''), coalesce(p.role, 'member'), u.created_at
+    from auth.users as u
+    left join public.profiles as p on p.id = u.id
+    order by u.created_at desc
+    limit 500;
+end;
+$$;
+
+revoke all on function public.admin_list_hello_work_users() from public, anon, authenticated;
+grant execute on function public.admin_list_hello_work_users() to authenticated;
