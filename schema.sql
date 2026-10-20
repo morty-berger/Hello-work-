@@ -126,3 +126,45 @@ drop policy if exists "Signed-in team can delete sales projects" on public.sales
 create policy "Signed-in team can delete sales projects" on public.sales_projects for delete to authenticated using (true);
 create index if not exists sales_projects_status_created_idx on public.sales_projects (status, created_at desc);
 create index if not exists sales_projects_title_search_idx on public.sales_projects using gin (to_tsvector('simple', title || ' ' || customer_name));
+
+
+-- Shared projects can move between departments without creating duplicate records.
+alter table public.sales_projects
+  add column if not exists department text not null default 'sales'
+  check (department in ('sales','operations','finance'));
+create index if not exists sales_projects_department_created_idx
+  on public.sales_projects (department, created_at desc);
+
+-- Checklist items belong to the shared project record, not a particular department.
+create table if not exists public.project_checklist_items (
+  id uuid primary key default gen_random_uuid(),
+  project_id uuid not null references public.sales_projects(id) on delete cascade,
+  title text not null check (char_length(trim(title)) between 1 and 240),
+  is_done boolean not null default false,
+  position integer not null default 0,
+  created_by uuid not null default auth.uid() references auth.users(id) on delete restrict,
+  created_at timestamptz not null default now(),
+  completed_at timestamptz
+);
+alter table public.project_checklist_items enable row level security;
+grant select, insert, update, delete on public.project_checklist_items to authenticated;
+drop policy if exists "Signed-in team can view project checklist" on public.project_checklist_items;
+create policy "Signed-in team can view project checklist" on public.project_checklist_items
+  for select to authenticated using (true);
+drop policy if exists "Signed-in team can add project checklist" on public.project_checklist_items;
+create policy "Signed-in team can add project checklist" on public.project_checklist_items
+  for insert to authenticated with check (
+    created_by = (select auth.uid()) and exists (
+      select 1 from public.sales_projects p where p.id = project_id
+    )
+  );
+drop policy if exists "Signed-in team can update project checklist" on public.project_checklist_items;
+create policy "Signed-in team can update project checklist" on public.project_checklist_items
+  for update to authenticated using (true) with check (
+    exists (select 1 from public.sales_projects p where p.id = project_id)
+  );
+drop policy if exists "Signed-in team can delete project checklist" on public.project_checklist_items;
+create policy "Signed-in team can delete project checklist" on public.project_checklist_items
+  for delete to authenticated using (true);
+create index if not exists project_checklist_items_project_position_idx
+  on public.project_checklist_items (project_id, position, created_at);
