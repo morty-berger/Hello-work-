@@ -38,6 +38,40 @@
   $("password").autocomplete = mode === "signin" ? "current-password" : "new-password";
   $("resetBtn").classList.toggle("hidden", mode !== "signin"); note("");
  }
+
+ // Mobile sidebar drawer controls.
+ function isPhoneLayout(){return window.matchMedia("(max-width: 720px)").matches;}
+ function closeMobileSidebar(){
+  document.body.classList.remove("mobile-sidebar-open");
+  const toggle=$("sidebarToggle");
+  if(toggle){toggle.setAttribute("aria-expanded","false");toggle.setAttribute("aria-label","Open menu");}
+  const label=toggle?.querySelector(".sidebar-toggle-label");
+  if(label)label.textContent="Menu";
+ }
+ function openMobileSidebar(){
+  document.body.classList.add("mobile-sidebar-open");
+  const toggle=$("sidebarToggle");
+  if(toggle){toggle.setAttribute("aria-expanded","true");toggle.setAttribute("aria-label","Close menu");}
+  const label=toggle?.querySelector(".sidebar-toggle-label");
+  if(label)label.textContent="Close menu";
+ }
+ $("sidebarToggle").addEventListener("click",()=>{
+  if(isPhoneLayout()){
+   if(document.body.classList.contains("mobile-sidebar-open"))closeMobileSidebar();
+   else openMobileSidebar();
+   return;
+  }
+  const shell=document.querySelector(".shell");
+  const collapsed=shell.classList.toggle("sidebar-collapsed");
+  $("sidebarToggle").setAttribute("aria-expanded",String(!collapsed));
+  $("sidebarToggle").setAttribute("aria-label",collapsed?"Show sidebar":"Hide sidebar");
+  const label=$("sidebarToggle").querySelector(".sidebar-toggle-label");
+  if(label)label.textContent=collapsed?"Show menu":"Hide menu";
+ });
+ $("sidebarClose").addEventListener("click",closeMobileSidebar);
+ document.addEventListener("keydown",event=>{if(event.key==="Escape")closeMobileSidebar();});
+ document.querySelectorAll("[data-sidebar-department],#sidebarManageUsersBtn,#brandHome").forEach(button=>button.addEventListener("click",()=>{if(isPhoneLayout())closeMobileSidebar();}));
+ window.addEventListener("resize",()=>{if(!isPhoneLayout())closeMobileSidebar();});
  function showApp(user, profile) {
   currentUser = user;
   currentProfile = profile;
