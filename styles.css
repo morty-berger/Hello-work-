@@ -507,3 +507,24 @@ button:focus-visible,a:focus-visible{outline:3px solid #8794ff;outline-offset:3p
  .add-checklist-form{align-items:stretch}.add-checklist-form .primary{min-height:44px}
  .checklist-row{padding:10px 8px}.checklist-item-label span{font-size:12px}
 }
+
+
+/* App-like refresh control and subtle top-only loading animation */
+.refresh-indicator{position:fixed;top:0;left:0;right:0;height:3px;z-index:3000;opacity:0;pointer-events:none;overflow:hidden;background:transparent;transition:opacity .12s ease}
+.refresh-indicator span{display:block;width:35%;height:100%;background:linear-gradient(90deg,#5368f5,#8c9bff,#c6f6df);transform:translateX(-110%);border-radius:0 4px 4px 0}
+body.is-refreshing .refresh-indicator{opacity:1}
+body.is-refreshing .refresh-indicator span{animation:hello-work-refresh .85s ease-in-out infinite}
+@keyframes hello-work-refresh{0%{transform:translateX(-110%)}100%{transform:translateX(390%)}}
+.app-refresh-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:36px;padding:7px 10px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);font:600 11px "DM Sans",sans-serif;cursor:pointer;white-space:nowrap}
+.app-refresh-btn>span:first-child{display:inline-block;font-size:19px;line-height:1}
+.app-refresh-btn:active{background:#f3f5ff}
+body.is-refreshing .app-refresh-btn>span:first-child{animation:hello-work-spin .7s linear infinite}
+body.is-refreshing .app-refresh-btn{opacity:.8}
+@keyframes hello-work-spin{to{transform:rotate(360deg)}}
+@media(max-width:720px){
+ .topline{gap:6px}
+ .app-refresh-btn{min-width:36px;min-height:36px;padding:6px 8px;margin-left:auto}
+ .refresh-button-label{display:none}
+ .topline .pill{max-width:calc(100vw - 150px);padding:8px 9px}
+}
+@media(prefers-reduced-motion:reduce){.refresh-indicator span,.app-refresh-btn>span:first-child{animation-duration:2s}}
