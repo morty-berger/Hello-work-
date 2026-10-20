@@ -5,7 +5,7 @@
 <meta name="theme-color" content="#101828"><title>Hello Work</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=3">
+<link rel="stylesheet" href="styles.css?v=4">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
 </head>
@@ -34,10 +34,24 @@
     </section>
     <section id="appPanel" class="app-panel hidden">
       <div class="welcome-row"><div><div class="eyebrow">YOUR WORKSPACE</div><h1 id="welcomeTitle">You're in.</h1><p class="intro">Welcome to Hello Work. Your next step starts here.</p></div><button id="signOutBtn" class="outline">Sign out ↗</button></div>
-      <nav id="adminMenu" class="admin-menu hidden" aria-label="Main menu"><button id="adminMenuToggle" class="admin-menu-toggle" type="button" aria-expanded="false"><span class="menu-symbol">☰</span><span>Menu</span><span class="menu-chevron">⌃</span></button><div id="adminMenuItems" class="admin-menu-items hidden"><button id="adminSubmenuToggle" class="admin-menu-item admin-submenu-toggle" type="button" aria-expanded="false"><span>⚙</span> Admin <span class="menu-arrow">⌄</span></button><div id="adminSubmenuItems" class="admin-submenu-items hidden"><button id="manageUsersBtn" class="admin-menu-item" type="button"><span>♙</span> Manage users <span class="menu-arrow">→</span></button></div></div></nav><section id="dashboardHome"><div class="dashboard-grid"><div class="dash-card"><span class="card-icon">✳</span><h3>Stay organized</h3><p>Keep the important things in one place and make progress visible.</p></div><div class="dash-card"><span class="card-icon">↗</span><h3>Move work forward</h3><p>A calm home base for your team, projects, and daily priorities.</p></div></div></section><section id="manageUsersView" class="manage-users hidden"><div class="section-heading"><div><div class="eyebrow">ADMIN / USERS</div><h2>Manage users</h2><p>Everyone who has created a Hello Work account.</p></div><button id="refreshUsersBtn" class="outline" type="button">↻ Refresh</button></div><div class="user-summary"><span class="summary-icon">♙</span><div><strong id="userCount">—</strong><span>Registered users</span></div></div><div class="user-table-wrap"><table class="user-table"><thead><tr><th>User</th><th>Email</th><th>Role</th><th>Joined</th></tr></thead><tbody id="userTableBody"><tr><td colspan="4" class="table-message">Sign in as an administrator to view users.</td></tr></tbody></table></div><p id="usersNotice" class="users-notice" role="status" aria-live="polite"></p></section>
+      <nav id="adminMenu" class="admin-menu hidden" aria-label="Main menu"><button id="adminMenuToggle" class="admin-menu-toggle" type="button" aria-expanded="false"><span class="menu-symbol">☰</span><span>Menu</span><span class="menu-chevron">⌃</span></button><div id="adminMenuItems" class="admin-menu-items hidden"><button id="adminSubmenuToggle" class="admin-menu-item admin-submenu-toggle" type="button" aria-expanded="false"><span>⚙</span> Admin <span class="menu-arrow">⌄</span></button><div id="adminSubmenuItems" class="admin-submenu-items hidden"><button id="manageUsersBtn" class="admin-menu-item" type="button"><span>♙</span> Manage users <span class="menu-arrow">→</span></button></div></div></nav><section id="dashboardHome">
+  <div class="workspace-intro"><div class="eyebrow">YOUR WORKSPACE</div><h2>Where do you want to focus?</h2><p>Choose a department to open its workspace. Each area will grow around the way your team works.</p></div>
+  <div class="department-grid">
+   <button class="department-card sales-card" type="button" data-department="sales"><span class="department-icon">↗</span><span class="department-label">DEPARTMENT 01</span><strong>Sales</strong><span class="department-description">Leads, opportunities, bids and follow-ups.</span><span class="department-link">Open Sales <span>→</span></span></button>
+   <button class="department-card operations-card" type="button" data-department="operations"><span class="department-icon">◈</span><span class="department-label">DEPARTMENT 02</span><strong>Operations</strong><span class="department-description">Jobs, schedules, field progress and coordination.</span><span class="department-link">Open Operations <span>→</span></span></button>
+   <button class="department-card finance-card" type="button" data-department="finance"><span class="department-icon">$</span><span class="department-label">DEPARTMENT 03</span><strong>Finance</strong><span class="department-description">Budgets, invoices, payments and profitability.</span><span class="department-link">Open Finance <span>→</span></span></button>
+  </div>
+  <p class="department-note"><span>✳</span> One workspace, three focused teams. More tools will be added inside each department.</p>
+ </section>
+ <section id="departmentView" class="department-view hidden">
+  <button id="backToDepartments" class="back-link" type="button">← All departments</button>
+  <div class="department-view-heading"><div id="departmentEyebrow" class="eyebrow">DEPARTMENT WORKSPACE</div><h2 id="departmentTitle">Sales</h2><p id="departmentIntro" class="intro"></p></div>
+  <div id="departmentTools" class="department-tools"></div>
+  <div class="next-step-card"><span class="next-step-icon">✳</span><div><strong>Built around your workflow</strong><p>This department is the starting point. Next, we can turn these sections into working tools for your team.</p></div></div>
+ </section><section id="manageUsersView" class="manage-users hidden"><div class="section-heading"><div><div class="eyebrow">ADMIN / USERS</div><h2>Manage users</h2><p>Everyone who has created a Hello Work account.</p></div><button id="refreshUsersBtn" class="outline" type="button">↻ Refresh</button></div><div class="user-summary"><span class="summary-icon">♙</span><div><strong id="userCount">—</strong><span>Registered users</span></div></div><div class="user-table-wrap"><table class="user-table"><thead><tr><th>User</th><th>Email</th><th>Role</th><th>Joined</th></tr></thead><tbody id="userTableBody"><tr><td colspan="4" class="table-message">Sign in as an administrator to view users.</td></tr></tbody></table></div><p id="usersNotice" class="users-notice" role="status" aria-live="polite"></p></section>
     </section>
     <footer><span>© 2026 Hello Work</span><span>Built for better workdays <b>✳</b></span></footer>
   </main>
 </div>
-<script src="app.js?v=3"></script>
+<script src="app.js?v=4"></script>
 </body></html>
