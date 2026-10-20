@@ -119,3 +119,38 @@ button:focus-visible,a:focus-visible{outline:3px solid #8794ff;outline-offset:3p
  .admin-menu{right:12px;bottom:calc(12px + env(safe-area-inset-bottom));width:min(205px,calc(100vw - 24px))}
  .admin-menu-toggle{min-height:52px}
 }
+
+
+/* Three department landing areas */
+.workspace-intro{max-width:650px;margin:28px 0 24px}
+.workspace-intro h2,.department-view-heading h2{font-size:clamp(27px,4vw,36px);letter-spacing:-1.2px;margin:9px 0}
+.workspace-intro p,.department-view-heading p{color:var(--muted);font-size:14px;line-height:1.7;max-width:570px}
+.department-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin:22px 0}
+.department-card{display:flex;flex-direction:column;align-items:flex-start;text-align:left;min-width:0;min-height:265px;padding:21px;border:1px solid var(--line);border-radius:18px;background:#fff;color:var(--ink);cursor:pointer;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
+.department-card:hover{transform:translateY(-3px);border-color:#c7cdfd;box-shadow:0 12px 28px #1018280d}
+.department-icon{display:grid;place-items:center;width:45px;height:45px;border-radius:14px;font-size:22px;font-weight:800;margin-bottom:23px}
+.sales-card .department-icon{background:#e9efff;color:#4059c7}
+.operations-card .department-icon{background:#e3f7ef;color:#087e5b}
+.finance-card .department-icon{background:#fff0d9;color:#a45d08}
+.department-label{font-size:9px;font-weight:800;letter-spacing:1.2px;color:#98a2b3;margin-bottom:7px}
+.department-card strong{font-family:Manrope,sans-serif;font-size:23px;letter-spacing:-.6px}
+.department-description{font-size:12px;color:var(--muted);line-height:1.65;margin-top:8px}
+.department-link{display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;margin-top:auto;padding-top:23px;font-size:12px;font-weight:700}
+.department-link span{font-size:18px}
+.department-note{display:flex;gap:9px;align-items:flex-start;color:var(--muted);font-size:12px;line-height:1.6;margin:22px 0}
+.department-note span{color:#5365d8}
+.department-view{padding:18px 0 28px}
+.back-link{border:0;background:transparent;color:#5365d8;font:700 13px "DM Sans",sans-serif;padding:8px 0;cursor:pointer}
+.department-view-heading{margin:22px 0}
+.department-view-heading .intro{margin-top:9px}
+.department-tools{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.department-tool-card{position:relative;min-width:0;padding:20px;border:1px solid var(--line);border-radius:16px;background:#fff}
+.tool-icon{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:#f1f3ff;color:#5365d8;font-size:19px;font-weight:800}
+.department-tool-card h3{font-size:15px;margin:15px 0 7px}
+.department-tool-card p{font-size:12px;line-height:1.65;color:var(--muted);margin:0 0 22px}
+.tool-status{display:inline-block;border-radius:20px;padding:5px 8px;background:#f2f4f7;color:#667085;font-size:9px;font-weight:800;letter-spacing:.6px}
+.next-step-card{display:flex;gap:13px;align-items:flex-start;margin-top:18px;padding:17px;border:1px solid #e3e7ff;border-radius:15px;background:#f8f9ff}
+.next-step-icon{color:#5365d8;font-size:20px}
+.next-step-card strong{font-size:13px}
+.next-step-card p{font-size:12px;line-height:1.6;color:var(--muted);margin:5px 0 0}
+@media(max-width:900px){.department-grid,.department-tools{grid-template-columns:1fr}.department-card{min-height:0;padding:18px}.department-icon{margin-bottom:15px}.department-link{padding-top:17px}.workspace-intro{margin-top:22px}}
