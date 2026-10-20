@@ -28,10 +28,59 @@
  }
  function showHome() {
   $("dashboardHome").classList.remove("hidden");
+  $("departmentView").classList.add("hidden");
   $("manageUsersView").classList.add("hidden");
+ }
+ const departments = {
+  sales: {
+   eyebrow:"DEPARTMENT 01 · SALES", title:"Sales",
+   intro:"Move opportunities forward, from the first conversation to a won job.",
+   tools:[
+    ["♙","Leads & contacts","Keep track of prospects, customers and key contacts."],
+    ["▤","Opportunities & bids","Organize estimates, proposals, bid dates and next steps."],
+    ["↻","Follow-ups","See who needs a call, email or proposal update."]
+   ]
+  },
+  operations: {
+   eyebrow:"DEPARTMENT 02 · OPERATIONS", title:"Operations",
+   intro:"Keep awarded work organized from handoff through completion.",
+   tools:[
+    ["▦","Job board","See active jobs, status, owners and upcoming milestones."],
+    ["◷","Scheduling","Coordinate crews, site dates, deliveries and deadlines."],
+    ["✓","Field progress","Track scope, site updates, materials and open issues."]
+   ]
+  },
+  finance: {
+   eyebrow:"DEPARTMENT 03 · FINANCE", title:"Finance",
+   intro:"Understand what each job costs, what is owed and how the business is performing.",
+   tools:[
+    ["$","Job profitability","Compare estimated costs, actual costs and expected margin."],
+    ["▤","Invoices & receivables","Track invoices, payment status and outstanding balances."],
+    ["↗","Cash flow & reporting","Get a clear view of money coming in and going out."]
+   ]
+  }
+ };
+ function showDepartment(key) {
+  const dept=departments[key]; if(!dept) return;
+  $("dashboardHome").classList.add("hidden");
+  $("manageUsersView").classList.add("hidden");
+  $("departmentView").classList.remove("hidden");
+  $("departmentEyebrow").textContent=dept.eyebrow;
+  $("departmentTitle").textContent=dept.title;
+  $("departmentIntro").textContent=dept.intro;
+  const tools=$("departmentTools"); tools.innerHTML="";
+  dept.tools.forEach(item=>{
+   const card=document.createElement("article"); card.className="department-tool-card";
+   const icon=document.createElement("span"); icon.className="tool-icon"; icon.textContent=item[0];
+   const title=document.createElement("h3"); title.textContent=item[1];
+   const description=document.createElement("p"); description.textContent=item[2];
+   const status=document.createElement("span"); status.className="tool-status"; status.textContent="PLANNED";
+   card.append(icon,title,description,status); tools.append(card);
+  });
  }
  function showManageUsers() {
   $("dashboardHome").classList.add("hidden");
+  $("departmentView").classList.add("hidden");
   $("manageUsersView").classList.remove("hidden");
   if (currentProfile?.role === "admin") loadUsers();
  }
@@ -77,7 +126,9 @@
  }
  $("adminMenuToggle").addEventListener("click",()=>{ const items=$("adminMenuItems"), opening=items.classList.contains("hidden"); items.classList.toggle("hidden",!opening); $("adminMenuToggle").setAttribute("aria-expanded",String(opening)); });
  $("adminSubmenuToggle").addEventListener("click",()=>{ const items=$("adminSubmenuItems"), opening=items.classList.contains("hidden"); items.classList.toggle("hidden",!opening); $("adminSubmenuToggle").setAttribute("aria-expanded",String(opening)); });
- $("manageUsersBtn").addEventListener("click",showManageUsers);
+ $("manageUsersBtn").addEventListener("click",()=>{ showManageUsers(); $("adminMenuItems").classList.add("hidden"); $("adminSubmenuItems").classList.add("hidden"); $("adminMenuToggle").setAttribute("aria-expanded","false"); $("adminSubmenuToggle").setAttribute("aria-expanded","false"); });
+ document.querySelectorAll("[data-department]").forEach(button=>button.addEventListener("click",()=>showDepartment(button.dataset.department)));
+ $("backToDepartments").addEventListener("click",showHome);
  $("refreshUsersBtn").addEventListener("click",loadUsers);
  $("signInTab").addEventListener("click",()=>setMode("signin"));
  $("signUpTab").addEventListener("click",()=>setMode("signup"));
