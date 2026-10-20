@@ -198,7 +198,9 @@ create table if not exists public.project_messages (
  constraint project_messages_non_task_open check (is_task or task_status = 'open')
 );
 alter table public.project_messages enable row level security;
-grant select, insert, update, delete on public.project_messages to authenticated;
+grant select, insert, delete on public.project_messages to authenticated;
+revoke update on public.project_messages from authenticated;
+grant update (task_status, completed_at, updated_at) on public.project_messages to authenticated;
 drop policy if exists "Team can view project messages" on public.project_messages;
 create policy "Team can view project messages" on public.project_messages for select to authenticated using (exists(select 1 from public.sales_projects p where p.id=project_id));
 drop policy if exists "Team can post project messages" on public.project_messages;
