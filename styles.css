@@ -64,3 +64,41 @@ button:focus-visible,a:focus-visible{outline:3px solid #8794ff;outline-offset:3p
   .section-heading{flex-direction:column}
   .section-heading #refreshUsersBtn{align-self:flex-end}
 }
+
+
+/* Floating side admin menu */
+.admin-menu{
+  position:fixed;
+  right:16px;
+  bottom:calc(16px + env(safe-area-inset-bottom));
+  z-index:1000;
+  width:190px;
+  margin:0;
+  display:flex;
+  flex-direction:column-reverse;
+  overflow:visible;
+  border-radius:15px;
+  box-shadow:0 12px 35px #10182826;
+}
+.admin-menu-toggle{
+  border-radius:14px;
+  min-height:52px;
+  box-shadow:0 4px 14px #10182812;
+}
+.admin-menu-items{
+  margin-bottom:8px;
+  border:1px solid var(--line);
+  border-radius:13px;
+  background:#fff;
+  padding:7px;
+  box-shadow:0 8px 24px #10182818;
+}
+.admin-menu-item{min-height:46px}
+@media(max-width:720px){
+  .admin-menu{
+    right:12px;
+    bottom:calc(12px + env(safe-area-inset-bottom));
+    width:min(205px,calc(100vw - 24px));
+  }
+  .admin-menu-toggle{min-height:52px}
+}
