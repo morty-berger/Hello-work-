@@ -99,3 +99,30 @@ $$;
 
 revoke all on function public.admin_list_hello_work_users() from public, anon, authenticated;
 grant execute on function public.admin_list_hello_work_users() to authenticated;
+
+
+-- Sales pipeline: every opportunity is a project.
+create table if not exists public.sales_projects (
+  id uuid primary key default gen_random_uuid(),
+  title text not null check (char_length(trim(title)) between 1 and 160),
+  customer_name text not null default '',
+  contact_email text not null default '',
+  estimated_value numeric(14,2),
+  status text not null default 'lead' check (status in ('lead','sale','active','complete','lost')),
+  notes text not null default '',
+  created_by uuid not null default auth.uid() references auth.users(id) on delete restrict,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+alter table public.sales_projects enable row level security;
+grant select, insert, update, delete on public.sales_projects to authenticated;
+drop policy if exists "Signed-in team can view sales projects" on public.sales_projects;
+create policy "Signed-in team can view sales projects" on public.sales_projects for select to authenticated using (true);
+drop policy if exists "Signed-in team can create sales projects" on public.sales_projects;
+create policy "Signed-in team can create sales projects" on public.sales_projects for insert to authenticated with check (created_by = (select auth.uid()));
+drop policy if exists "Signed-in team can update sales projects" on public.sales_projects;
+create policy "Signed-in team can update sales projects" on public.sales_projects for update to authenticated using (true) with check (true);
+drop policy if exists "Signed-in team can delete sales projects" on public.sales_projects;
+create policy "Signed-in team can delete sales projects" on public.sales_projects for delete to authenticated using (true);
+create index if not exists sales_projects_status_created_idx on public.sales_projects (status, created_at desc);
+create index if not exists sales_projects_title_search_idx on public.sales_projects using gin (to_tsvector('simple', title || ' ' || customer_name));
