@@ -5,11 +5,12 @@
 <meta name="theme-color" content="#101828"><title>Hello Work</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=9">
+<link rel="stylesheet" href="styles.css?v=10">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
 </head>
 <body>
+<div id="refreshIndicator" class="refresh-indicator" role="status" aria-label="Refreshing Hello Work"><span></span></div>
 <div class="shell">
   <aside class="side" id="appSidebar">
     <a class="brand" href="#" id="brandHome"><span class="brand-icon">h.</span><span>Hello Work<small>YOUR WORKSPACE</small></span></a>
@@ -25,7 +26,7 @@
     <div class="side-bottom"><span class="status-dot"></span> Your workspace, made simple</div>
   </aside>
   <main class="main">
-    <div class="topline"><button id="sidebarToggle" class="sidebar-toggle" type="button" aria-expanded="true" aria-label="Hide sidebar"><span>☰</span><span class="sidebar-toggle-label">Hide menu</span></button><span class="pill"><span class="tiny-dot"></span> WORKSPACE PORTAL</span><span class="top-caption">Simple. Focused. Together.</span></div>
+    <div class="topline"><button id="sidebarToggle" class="sidebar-toggle" type="button" aria-expanded="true" aria-label="Hide sidebar"><span>☰</span><span class="sidebar-toggle-label">Hide menu</span></button><span class="pill"><span class="tiny-dot"></span> WORKSPACE PORTAL</span><span class="top-caption">Simple. Focused. Together.</span><button id="appRefreshBtn" class="app-refresh-btn" type="button" aria-label="Refresh Hello Work" title="Refresh app"><span aria-hidden="true">↻</span><span class="refresh-button-label">Refresh</span></button></div>
     <section id="authPanel" class="auth-wrap">
       <div class="eyebrow">WELCOME TO HELLO WORK</div>
       <h1 id="formTitle">Make room for<br><span>great work.</span></h1>
@@ -122,5 +123,5 @@
     <footer><span>© 2026 Hello Work</span><span>Built for better workdays <b>✳</b></span></footer>
   </main>
 </div>
-<script src="app.js?v=12"></script>
+<script src="app.js?v=13"></script>
 </body></html>
