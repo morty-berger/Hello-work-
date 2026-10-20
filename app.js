@@ -53,6 +53,8 @@
   if (!isAdmin && $("manageUsersView").classList.contains("hidden") === false) showHome();
  }
  function showHome() {
+  if(projectChatChannel&&client){client.removeChannel(projectChatChannel);projectChatChannel=null;}
+  closeNewProjectForm();
   $("dashboardHome").classList.remove("hidden");
   $("departmentView").classList.add("hidden");
   $("manageUsersView").classList.add("hidden");
@@ -115,9 +117,12 @@
  let salesProjects=[], projectFilter="all", projectSearchTerm="", activeDepartment="sales", activeProject=null;
  const departmentNames={sales:"Sales",operations:"Operations",finance:"Finance"};
  function showDepartmentProjects(key){
+  if(projectChatChannel&&client){client.removeChannel(projectChatChannel);projectChatChannel=null;}
+  closeNewProjectForm();
   activeDepartment=key;projectFilter="all";projectSearchTerm="";$("projectSearch").value="";
   $("dashboardHome").classList.add("hidden");$("departmentView").classList.add("hidden");$("manageUsersView").classList.add("hidden");$("projectDetailView").classList.add("hidden");$("salesProjectsView").classList.remove("hidden");
   $("salesBackBtn").textContent="← All departments";$("salesProjectsView").querySelector(".eyebrow").textContent="DEPARTMENT · "+departmentNames[key].toUpperCase();$("salesProjectsView").querySelector("h2").textContent=departmentNames[key]+" projects";$("salesProjectsView").querySelector(".sales-heading p").textContent="Shared projects assigned to "+departmentNames[key]+". Open any project to update details and checklists.";
+  $("newProjectBtn").classList.toggle("hidden",key!=="sales");
   loadSalesProjects();
  }
  function showSalesProjects(){showDepartmentProjects("sales");}
@@ -130,10 +135,10 @@
  function renderSalesProjectList(){
   const target=$("salesProjectList");target.innerHTML="";const term=projectSearchTerm.trim().toLowerCase();
   const rows=salesProjects.filter(p=>(projectFilter==="all"||p.status===projectFilter)&&(!term||[p.title,p.customer_name,p.contact_email].some(v=>(v||"").toLowerCase().includes(term))));
-  if(!rows.length){const box=document.createElement("div");box.className="projects-empty";const h=document.createElement("h3");h.textContent=salesProjects.length?"No matching projects":"No projects in "+departmentNames[activeDepartment]+" yet";const p=document.createElement("p");p.textContent=salesProjects.length?"Try another search or status filter.":"Create a project here, or move an existing project into this department.";box.append(h,p);const b=document.createElement("button");b.type="button";b.className="primary";b.textContent="＋ New project";b.addEventListener("click",openNewProjectForm);box.append(b);target.append(box);return;}
+  if(!rows.length){const box=document.createElement("div");box.className="projects-empty";const h=document.createElement("h3");h.textContent=salesProjects.length?"No matching projects":"No projects in "+departmentNames[activeDepartment]+" yet";const p=document.createElement("p");p.textContent=salesProjects.length?"Try another search or status filter.":"Create a project here, or move an existing project into this department.";box.append(h,p);if(activeDepartment==="sales"){const b=document.createElement("button");b.type="button";b.className="primary";b.textContent="＋ New project";b.addEventListener("click",openNewProjectForm);box.append(b);}else{const b=document.createElement("button");b.type="button";b.className="outline";b.textContent="Create a lead in Sales →";b.addEventListener("click",()=>showDepartmentProjects("sales"));box.append(b);}target.append(box);return;}
   rows.forEach(project=>{
    const card=document.createElement("article");card.className="sales-project-card project-card-clickable";card.tabIndex=0;card.setAttribute("role","button");card.setAttribute("aria-label","Open project "+project.title);card.addEventListener("click",()=>showProjectDetail(project));card.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();showProjectDetail(project);}});
-   const top=document.createElement("div");top.className="sales-project-top";const tw=document.createElement("div");tw.className="sales-project-title-wrap";const h=document.createElement("h3");h.textContent=project.title;const customer=document.createElement("p");customer.className="sales-project-customer";customer.textContent=project.customer_name||"Customer not added";tw.append(h,customer);
+   const top=document.createElement("div");top.className="sales-project-top";const tw=document.createElement("div");tw.className="sales-project-title-wrap";const h=document.createElement("h3");h.textContent=project.title;const customer=document.createElement("p");customer.className="sales-project-customer";customer.textContent=(project.project_number?"HW-"+String(project.project_number).padStart(4,"0")+" · ":"")+(project.customer_name||"Customer not added");tw.append(h,customer);
    const select=document.createElement("select");select.className="project-status-select status-"+project.status;select.setAttribute("aria-label","Change status for "+project.title);projectStatuses.forEach(s=>{const o=document.createElement("option");o.value=s.key;o.textContent=s.label;o.selected=s.key===project.status;select.append(o);});select.addEventListener("click",e=>e.stopPropagation());select.addEventListener("change",e=>{e.stopPropagation();updateProjectStatus(project.id,select.value);});top.append(tw,select);card.append(top);
    const details=document.createElement("div");details.className="sales-project-details";if(project.estimated_value!==null&&project.estimated_value!==""){const value=document.createElement("span");value.className="project-value";value.textContent=projectMoney(project.estimated_value);details.append(value);}if(project.contact_email){const email=document.createElement("span");email.className="project-email";email.textContent=project.contact_email;details.append(email);}const date=document.createElement("span");date.className="project-created";date.textContent="Created "+new Date(project.created_at).toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"});details.append(date);card.append(details);
    if(project.notes){const notes=document.createElement("p");notes.className="sales-project-notes";notes.textContent=project.notes;card.append(notes);}const open=document.createElement("span");open.className="project-open-link";open.textContent="Open project →";card.append(open);target.append(card);
