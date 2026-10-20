@@ -567,3 +567,6 @@ body.is-refreshing .app-refresh-btn{opacity:.8}
  .chat-message-head{gap:6px}
  .chat-timestamp{white-space:normal;text-align:right}
 }
+
+.project-field input[type="date"]{min-height:42px}
+@media(max-width:720px){.project-field input[type="date"]{font-size:16px}}
