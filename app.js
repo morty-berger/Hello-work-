@@ -34,6 +34,7 @@
   $("departmentView").classList.add("hidden");
   $("manageUsersView").classList.add("hidden");
   $("salesProjectsView").classList.add("hidden");
+  $("projectDetailView").classList.add("hidden");
  }
  const departments = {
   sales: {
@@ -70,6 +71,7 @@
   $("dashboardHome").classList.add("hidden");
   $("manageUsersView").classList.add("hidden");
   $("salesProjectsView").classList.add("hidden");
+  $("projectDetailView").classList.add("hidden");
   $("departmentView").classList.remove("hidden");
   $("departmentEyebrow").textContent=dept.eyebrow;
   $("departmentTitle").textContent=dept.title;
@@ -85,85 +87,61 @@
   });
  }
 
+
  const projectStatuses=[{key:"lead",label:"Lead"},{key:"sale",label:"Sale"},{key:"active",label:"Active project"},{key:"complete",label:"Complete project"},{key:"lost",label:"Lost project"}];
- let salesProjects=[], projectFilter="all", projectSearchTerm="";
- function showSalesProjects(){ $("dashboardHome").classList.add("hidden");$("departmentView").classList.add("hidden");$("manageUsersView").classList.add("hidden");$("salesProjectsView").classList.remove("hidden");loadSalesProjects(); }
+ let salesProjects=[], projectFilter="all", projectSearchTerm="", activeDepartment="sales", activeProject=null;
+ const departmentNames={sales:"Sales",operations:"Operations",finance:"Finance"};
+ function showDepartmentProjects(key){
+  activeDepartment=key;projectFilter="all";projectSearchTerm="";$("projectSearch").value="";
+  $("dashboardHome").classList.add("hidden");$("departmentView").classList.add("hidden");$("manageUsersView").classList.add("hidden");$("projectDetailView").classList.add("hidden");$("salesProjectsView").classList.remove("hidden");
+  $("salesBackBtn").textContent="← All departments";$("salesProjectsView").querySelector(".eyebrow").textContent="DEPARTMENT · "+departmentNames[key].toUpperCase();$("salesProjectsView").querySelector("h2").textContent=departmentNames[key]+" projects";$("salesProjectsView").querySelector(".sales-heading p").textContent="Shared projects assigned to "+departmentNames[key]+". Open any project to update details and checklists.";
+  loadSalesProjects();
+ }
+ function showSalesProjects(){showDepartmentProjects("sales");}
  function projectMoney(value){return value===null||value===""||value===undefined?"":new Intl.NumberFormat("en-US",{style:"currency",currency:"USD",maximumFractionDigits:0}).format(Number(value));}
  function renderSalesStats(){
   const target=$("salesStats");target.innerHTML="";
-  [{key:"all",label:"All projects"},...projectStatuses.map(s=>({key:s.key,label:s.label}))].forEach(s=>{
-   const n=s.key==="all"?salesProjects.length:salesProjects.filter(p=>p.status===s.key).length;
-   const b=document.createElement("button");b.type="button";b.className="sales-stat"+(projectFilter===s.key?" active":"");b.setAttribute("aria-pressed",String(projectFilter===s.key));
-   const strong=document.createElement("strong");strong.textContent=String(n);const label=document.createElement("span");label.textContent=s.label;b.append(strong,label);
-   b.addEventListener("click",()=>{projectFilter=s.key;renderSalesStats();renderProjectFilters();renderSalesProjectList();});target.append(b);
-  });
+  [{key:"all",label:"All projects"},...projectStatuses.map(s=>({key:s.key,label:s.label}))].forEach(s=>{const n=s.key==="all"?salesProjects.length:salesProjects.filter(p=>p.status===s.key).length;const b=document.createElement("button");b.type="button";b.className="sales-stat"+(projectFilter===s.key?" active":"");b.setAttribute("aria-pressed",String(projectFilter===s.key));const strong=document.createElement("strong");strong.textContent=String(n);const label=document.createElement("span");label.textContent=s.label;b.append(strong,label);b.addEventListener("click",()=>{projectFilter=s.key;renderSalesStats();renderProjectFilters();renderSalesProjectList();});target.append(b);});
  }
- function renderProjectFilters(){
-  const target=$("projectFilters");target.innerHTML="";
-  [{key:"all",label:"All"},...projectStatuses].forEach(s=>{const b=document.createElement("button");b.type="button";b.className="project-filter"+(projectFilter===s.key?" active":"");b.textContent=s.label;b.addEventListener("click",()=>{projectFilter=s.key;renderSalesStats();renderProjectFilters();renderSalesProjectList();});target.append(b);});
- }
+ function renderProjectFilters(){const target=$("projectFilters");target.innerHTML="";[{key:"all",label:"All"},...projectStatuses].forEach(s=>{const b=document.createElement("button");b.type="button";b.className="project-filter"+(projectFilter===s.key?" active":"");b.textContent=s.label;b.addEventListener("click",()=>{projectFilter=s.key;renderSalesStats();renderProjectFilters();renderSalesProjectList();});target.append(b);});}
  function renderSalesProjectList(){
-  const target=$("salesProjectList");target.innerHTML="";
-  const term=projectSearchTerm.trim().toLowerCase();
+  const target=$("salesProjectList");target.innerHTML="";const term=projectSearchTerm.trim().toLowerCase();
   const rows=salesProjects.filter(p=>(projectFilter==="all"||p.status===projectFilter)&&(!term||[p.title,p.customer_name,p.contact_email].some(v=>(v||"").toLowerCase().includes(term))));
-  if(!rows.length){const box=document.createElement("div");box.className="projects-empty";const h=document.createElement("h3");h.textContent=salesProjects.length?"No matching projects":"Your sales pipeline starts here";const p=document.createElement("p");p.textContent=salesProjects.length?"Try another search or status filter.":"Create your first project. It starts as a Lead, then move it through the pipeline.";box.append(h,p);if(!salesProjects.length){const b=document.createElement("button");b.type="button";b.className="primary";b.textContent="＋ New project";b.addEventListener("click",openNewProjectForm);box.append(b);}target.append(box);return;}
+  if(!rows.length){const box=document.createElement("div");box.className="projects-empty";const h=document.createElement("h3");h.textContent=salesProjects.length?"No matching projects":"No projects in "+departmentNames[activeDepartment]+" yet";const p=document.createElement("p");p.textContent=salesProjects.length?"Try another search or status filter.":"Create a project here, or move an existing project into this department.";box.append(h,p);const b=document.createElement("button");b.type="button";b.className="primary";b.textContent="＋ New project";b.addEventListener("click",openNewProjectForm);box.append(b);target.append(box);return;}
   rows.forEach(project=>{
-   const card=document.createElement("article");card.className="sales-project-card";
-   const top=document.createElement("div");top.className="sales-project-top";const tw=document.createElement("div");tw.className="sales-project-title-wrap";
-   const h=document.createElement("h3");h.textContent=project.title;const customer=document.createElement("p");customer.className="sales-project-customer";customer.textContent=project.customer_name||"Customer not added";tw.append(h,customer);
-   const select=document.createElement("select");select.className="project-status-select status-"+project.status;select.setAttribute("aria-label","Change status for "+project.title);
-   projectStatuses.forEach(s=>{const o=document.createElement("option");o.value=s.key;o.textContent=s.label;o.selected=s.key===project.status;select.append(o);});
-   select.addEventListener("change",()=>updateProjectStatus(project.id,select.value));top.append(tw,select);card.append(top);
-   const details=document.createElement("div");details.className="sales-project-details";
-   if(project.estimated_value!==null&&project.estimated_value!==""){const value=document.createElement("span");value.className="project-value";value.textContent=projectMoney(project.estimated_value);details.append(value);}
-   if(project.contact_email){const email=document.createElement("span");email.className="project-email";email.textContent=project.contact_email;details.append(email);}
-   const date=document.createElement("span");date.className="project-created";date.textContent="Created "+new Date(project.created_at).toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"});details.append(date);card.append(details);
-   if(project.notes){const notes=document.createElement("p");notes.className="sales-project-notes";notes.textContent=project.notes;card.append(notes);}target.append(card);
+   const card=document.createElement("article");card.className="sales-project-card project-card-clickable";card.tabIndex=0;card.setAttribute("role","button");card.setAttribute("aria-label","Open project "+project.title);card.addEventListener("click",()=>showProjectDetail(project));card.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();showProjectDetail(project);}});
+   const top=document.createElement("div");top.className="sales-project-top";const tw=document.createElement("div");tw.className="sales-project-title-wrap";const h=document.createElement("h3");h.textContent=project.title;const customer=document.createElement("p");customer.className="sales-project-customer";customer.textContent=project.customer_name||"Customer not added";tw.append(h,customer);
+   const select=document.createElement("select");select.className="project-status-select status-"+project.status;select.setAttribute("aria-label","Change status for "+project.title);projectStatuses.forEach(s=>{const o=document.createElement("option");o.value=s.key;o.textContent=s.label;o.selected=s.key===project.status;select.append(o);});select.addEventListener("click",e=>e.stopPropagation());select.addEventListener("change",e=>{e.stopPropagation();updateProjectStatus(project.id,select.value);});top.append(tw,select);card.append(top);
+   const details=document.createElement("div");details.className="sales-project-details";if(project.estimated_value!==null&&project.estimated_value!==""){const value=document.createElement("span");value.className="project-value";value.textContent=projectMoney(project.estimated_value);details.append(value);}if(project.contact_email){const email=document.createElement("span");email.className="project-email";email.textContent=project.contact_email;details.append(email);}const date=document.createElement("span");date.className="project-created";date.textContent="Created "+new Date(project.created_at).toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"});details.append(date);card.append(details);
+   if(project.notes){const notes=document.createElement("p");notes.className="sales-project-notes";notes.textContent=project.notes;card.append(notes);}const open=document.createElement("span");open.className="project-open-link";open.textContent="Open project →";card.append(open);target.append(card);
   });
  }
  async function loadSalesProjects(){
-  const target=$("salesProjectList");target.innerHTML='<div class="projects-loading">Loading sales projects…</div>';$("projectsNotice").textContent="";
-  if(!client){target.textContent="Please sign in to load sales projects.";return;}
-  const {data,error}=await client.from("sales_projects").select("id,title,customer_name,contact_email,estimated_value,status,notes,created_at").order("created_at",{ascending:false});
-  if(error){console.error(error);target.textContent="Could not load projects: "+error.message;return;}
-  salesProjects=data||[];renderSalesStats();renderProjectFilters();renderSalesProjectList();
+  const target=$("salesProjectList");target.innerHTML='<div class="projects-loading">Loading projects…</div>';$("projectsNotice").textContent="";if(!client){target.textContent="Please sign in to load projects.";return;}
+  const {data,error}=await client.from("sales_projects").select("id,title,customer_name,contact_email,estimated_value,status,notes,created_at,department,updated_at").eq("department",activeDepartment).order("created_at",{ascending:false});
+  if(error){console.error(error);target.textContent="Could not load projects: "+error.message;return;}salesProjects=data||[];renderSalesStats();renderProjectFilters();renderSalesProjectList();
  }
- async function updateProjectStatus(id,status){
-  $("projectsNotice").textContent="Saving status…";
-  const {error}=await client.from("sales_projects").update({status,updated_at:new Date().toISOString()}).eq("id",id);
-  if(error){$("projectsNotice").textContent="Status wasn't saved: "+error.message;await loadSalesProjects();return;}
-  const p=salesProjects.find(item=>item.id===id);if(p)p.status=status;$("projectsNotice").textContent="Project status updated.";renderSalesStats();renderProjectFilters();renderSalesProjectList();
- }
+ async function updateProjectStatus(id,status){$("projectsNotice").textContent="Saving status…";const {error}=await client.from("sales_projects").update({status,updated_at:new Date().toISOString()}).eq("id",id);if(error){$("projectsNotice").textContent="Status wasn't saved: "+error.message;await loadSalesProjects();return;}const p=salesProjects.find(item=>item.id===id);if(p)p.status=status;$("projectsNotice").textContent="Project status updated.";renderSalesStats();renderProjectFilters();renderSalesProjectList();}
  function openNewProjectForm(){$("newProjectForm").classList.remove("hidden");$("projectFormNotice").textContent="";$("projectTitle").focus();}
  function closeNewProjectForm(){$("newProjectForm").classList.add("hidden");$("newProjectForm").reset();$("projectFormNotice").textContent="";}
- $("newProjectBtn").addEventListener("click",openNewProjectForm);
- $("cancelNewProject").addEventListener("click",closeNewProjectForm);$("cancelNewProjectBottom").addEventListener("click",closeNewProjectForm);
- $("projectSearch").addEventListener("input",e=>{projectSearchTerm=e.target.value;renderSalesProjectList();});
- $("salesBackBtn").addEventListener("click",showHome);
- $("newProjectForm").addEventListener("submit",async e=>{
-  e.preventDefault();if(!client||!currentUser)return;
-  const title=$("projectTitle").value.trim();if(!title){$("projectFormNotice").textContent="Please enter a project name.";return;}
-  const raw=$("projectValue").value;const record={title,customer_name:$("projectCustomer").value.trim(),contact_email:$("projectEmail").value.trim(),estimated_value:raw===""?null:Number(raw),notes:$("projectNotes").value.trim(),status:"lead",created_by:currentUser.id};
-  const save=$("saveNewProject");save.disabled=true;save.textContent="Creating…";$("projectFormNotice").textContent="";
-  const {error}=await client.from("sales_projects").insert(record);save.disabled=false;save.innerHTML='Create lead <span>→</span>';
-  if(error){$("projectFormNotice").textContent="Could not create project: "+error.message;return;}
-  closeNewProjectForm();projectFilter="all";projectSearchTerm="";$("projectSearch").value="";await loadSalesProjects();$("projectsNotice").textContent="Project created as a Lead.";
- });
- $("sidebarToggle").addEventListener("click",()=>{
-  const shell=document.querySelector(".shell");
-  if(window.matchMedia("(max-width:720px)").matches){
-   const opening=!document.body.classList.contains("mobile-sidebar-open");document.body.classList.toggle("mobile-sidebar-open",opening);$("sidebarToggle").setAttribute("aria-expanded",String(opening));$("sidebarToggle").setAttribute("aria-label",opening?"Close menu":"Open menu");$("sidebarToggle").querySelector(".sidebar-toggle-label").textContent=opening?"Close menu":"Menu";
-  }else{
-   const collapsed=shell.classList.toggle("sidebar-collapsed");$("sidebarToggle").setAttribute("aria-expanded",String(!collapsed));$("sidebarToggle").setAttribute("aria-label",collapsed?"Show sidebar":"Hide sidebar");$("sidebarToggle").querySelector(".sidebar-toggle-label").textContent=collapsed?"Show menu":"Hide menu";
-  }
- });
- function closeMobileSidebar(){document.body.classList.remove("mobile-sidebar-open");if($("sidebarToggle")){$("sidebarToggle").setAttribute("aria-expanded","false");$("sidebarToggle").setAttribute("aria-label","Open menu");$("sidebarToggle").querySelector(".sidebar-toggle-label").textContent="Menu";}}
- $("sidebarClose").addEventListener("click",closeMobileSidebar);
+ $("newProjectBtn").addEventListener("click",openNewProjectForm);$("cancelNewProject").addEventListener("click",closeNewProjectForm);$("cancelNewProjectBottom").addEventListener("click",closeNewProjectForm);$("projectSearch").addEventListener("input",e=>{projectSearchTerm=e.target.value;renderSalesProjectList();});$("salesBackBtn").addEventListener("click",showHome);
+ $("newProjectForm").addEventListener("submit",async e=>{e.preventDefault();if(!client||!currentUser)return;const title=$("projectTitle").value.trim();if(!title){$("projectFormNotice").textContent="Please enter a project name.";return;}const raw=$("projectValue").value;const record={title,customer_name:$("projectCustomer").value.trim(),contact_email:$("projectEmail").value.trim(),estimated_value:raw===""?null:Number(raw),notes:$("projectNotes").value.trim(),status:"lead",department:activeDepartment,created_by:currentUser.id};const save=$("saveNewProject");save.disabled=true;save.textContent="Creating…";$("projectFormNotice").textContent="";const {error}=await client.from("sales_projects").insert(record);save.disabled=false;save.innerHTML='Create lead <span>→</span>';if(error){$("projectFormNotice").textContent="Could not create project: "+error.message;return;}closeNewProjectForm();projectFilter="all";projectSearchTerm="";$("projectSearch").value="";await loadSalesProjects();$("projectsNotice").textContent="Project created.";});
+ function showProjectDetail(project){activeProject=project;$("dashboardHome").classList.add("hidden");$("departmentView").classList.add("hidden");$("manageUsersView").classList.add("hidden");$("salesProjectsView").classList.add("hidden");$("projectDetailView").classList.remove("hidden");$("detailSaveNotice").textContent="";$("departmentMoveNotice").textContent="";renderProjectDetail();loadChecklist();}
+ function renderProjectDetail(){if(!activeProject)return;const p=activeProject;$("detailProjectTitle").textContent=p.title;$("detailProjectSubtitle").textContent=(p.customer_name||"Customer not added")+" · "+(departmentNames[p.department]||"Sales");$("detailStatusBadge").textContent=(projectStatuses.find(s=>s.key===p.status)||projectStatuses[0]).label;$("detailTitle").value=p.title||"";$("detailCustomer").value=p.customer_name||"";$("detailEmail").value=p.contact_email||"";$("detailValue").value=p.estimated_value??"";$("detailNotes").value=p.notes||"";$("projectDepartmentSelect").value=p.department||"sales";const sel=$("detailStatusSelect");sel.innerHTML="";projectStatuses.forEach(s=>{const o=document.createElement("option");o.value=s.key;o.textContent=s.label;o.selected=s.key===p.status;sel.append(o);});}
+ async function loadChecklist(){const target=$("projectChecklist");target.innerHTML='<div class="projects-loading">Loading checklist…</div>';if(!activeProject||!client)return;const {data,error}=await client.from("project_checklist_items").select("id,title,is_done,position,created_at,completed_at").eq("project_id",activeProject.id).order("position",{ascending:true}).order("created_at",{ascending:true});if(error){target.textContent="Could not load checklist: "+error.message;return;}target.innerHTML="";const items=data||[];$("checklistProgress").textContent=items.filter(i=>i.is_done).length+" / "+items.length+" done";if(!items.length){const empty=document.createElement("p");empty.className="checklist-empty";empty.textContent="No checklist items yet. Add the first next step above.";target.append(empty);return;}items.forEach(item=>{const row=document.createElement("div");row.className="checklist-row"+(item.is_done?" is-done":"");const label=document.createElement("label");label.className="checklist-item-label";const check=document.createElement("input");check.type="checkbox";check.checked=item.is_done;check.addEventListener("change",()=>toggleChecklistItem(item,check.checked));const title=document.createElement("span");title.textContent=item.title;label.append(check,title);const remove=document.createElement("button");remove.type="button";remove.className="checklist-delete";remove.textContent="×";remove.setAttribute("aria-label","Delete "+item.title);remove.addEventListener("click",()=>deleteChecklistItem(item));row.append(label,remove);target.append(row);});}
+ async function toggleChecklistItem(item,isDone){const {error}=await client.from("project_checklist_items").update({is_done:isDone,completed_at:isDone?new Date().toISOString():null}).eq("id",item.id);if(error){$("checklistNotice").textContent="Could not update item: "+error.message;await loadChecklist();return;}await loadChecklist();}
+ async function deleteChecklistItem(item){if(!confirm("Delete this checklist item?"))return;const {error}=await client.from("project_checklist_items").delete().eq("id",item.id);if(error){$("checklistNotice").textContent="Could not delete item: "+error.message;return;}await loadChecklist();}
+ $("addChecklistForm").addEventListener("submit",async e=>{e.preventDefault();if(!activeProject||!currentUser)return;const title=$("newChecklistItem").value.trim();if(!title)return;const btn=$("addChecklistBtn");btn.disabled=true;const {error}=await client.from("project_checklist_items").insert({project_id:activeProject.id,title,created_by:currentUser.id});btn.disabled=false;if(error){$("checklistNotice").textContent="Could not add item: "+error.message;return;}$("newChecklistItem").value="";$("checklistNotice").textContent="";await loadChecklist();});
+ $("editProjectForm").addEventListener("submit",async e=>{e.preventDefault();if(!activeProject)return;const title=$("detailTitle").value.trim();if(!title){$("detailSaveNotice").textContent="Project name is required.";return;}const raw=$("detailValue").value;const patch={title,customer_name:$("detailCustomer").value.trim(),contact_email:$("detailEmail").value.trim(),estimated_value:raw===""?null:Number(raw),notes:$("detailNotes").value.trim(),updated_at:new Date().toISOString()};const btn=$("saveProjectDetails");btn.disabled=true;const {data,error}=await client.from("sales_projects").update(patch).eq("id",activeProject.id).select("id,title,customer_name,contact_email,estimated_value,status,notes,created_at,department,updated_at").single();btn.disabled=false;if(error){$("detailSaveNotice").textContent="Could not save project: "+error.message;return;}activeProject=data;salesProjects=salesProjects.map(p=>p.id===data.id?data:p);renderProjectDetail();$("detailSaveNotice").textContent="Project details saved."});
+ $("projectDepartmentSelect").addEventListener("change",async e=>{if(!activeProject)return;const next=e.target.value;const {data,error}=await client.from("sales_projects").update({department:next,updated_at:new Date().toISOString()}).eq("id",activeProject.id).select("id,title,customer_name,contact_email,estimated_value,status,notes,created_at,department,updated_at").single();if(error){$("departmentMoveNotice").textContent="Could not move project: "+error.message;e.target.value=activeProject.department||"sales";return;}activeProject=data;salesProjects=salesProjects.map(p=>p.id===data.id?data:p);renderProjectDetail();$("departmentMoveNotice").textContent="Moved to "+departmentNames[next]+". Details and checklist are unchanged."});
+ $("detailStatusSelect").addEventListener("change",async e=>{if(!activeProject)return;const next=e.target.value;const {error}=await client.from("sales_projects").update({status:next,updated_at:new Date().toISOString()}).eq("id",activeProject.id);if(error){$("departmentMoveNotice").textContent="Could not update status: "+error.message;renderProjectDetail();return;}activeProject.status=next;salesProjects=salesProjects.map(p=>p.id===activeProject.id?activeProject:p);renderProjectDetail();$("departmentMoveNotice").textContent="Project status updated."});
+ $("projectDetailBack").addEventListener("click",()=>showDepartmentProjects(activeDepartment));
 
  function showManageUsers() {
   $("dashboardHome").classList.add("hidden");
   $("departmentView").classList.add("hidden");
   $("salesProjectsView").classList.add("hidden");
+  $("projectDetailView").classList.add("hidden");
   $("manageUsersView").classList.remove("hidden");
   if (currentProfile?.role === "admin") loadUsers();
  }
