@@ -125,7 +125,7 @@ button:focus-visible,a:focus-visible{outline:3px solid #8794ff;outline-offset:3p
 .workspace-intro{max-width:650px;margin:28px 0 24px}
 .workspace-intro h2,.department-view-heading h2{font-size:clamp(27px,4vw,36px);letter-spacing:-1.2px;margin:9px 0}
 .workspace-intro p,.department-view-heading p{color:var(--muted);font-size:14px;line-height:1.7;max-width:570px}
-.department-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin:22px 0}
+.department-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px;margin:22px 0;max-width:900px}
 .department-card{display:flex;flex-direction:column;align-items:flex-start;text-align:left;min-width:0;min-height:265px;padding:21px;border:1px solid var(--line);border-radius:18px;background:#fff;color:var(--ink);cursor:pointer;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
 .department-card:hover{transform:translateY(-3px);border-color:#c7cdfd;box-shadow:0 12px 28px #1018280d}
 .department-icon{display:grid;place-items:center;width:45px;height:45px;border-radius:14px;font-size:22px;font-weight:800;margin-bottom:23px}
