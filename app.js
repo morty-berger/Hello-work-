@@ -23,8 +23,11 @@
   const label = profile?.full_name || user.email?.split("@")[0] || "there";
   $("welcomeTitle").textContent = "Hi, " + label + ".";
   const isAdmin = profile?.role === "admin";
-  $("adminMenu").classList.toggle("hidden", !isAdmin);
-  if (!isAdmin) showHome();
+  $("sidebarNav").classList.remove("hidden");
+  $("sideNote").classList.add("hidden");
+  $("sidebarAdminSection").classList.toggle("hidden",!isAdmin);
+  document.querySelectorAll("[data-sidebar-department]").forEach(button=>button.classList.remove("active"));
+  if (!isAdmin && $("manageUsersView").classList.contains("hidden") === false) showHome();
  }
  function showHome() {
   $("dashboardHome").classList.remove("hidden");
@@ -95,7 +98,7 @@
    currentUser=null; currentProfile=null;
    $("appPanel").classList.add("hidden"); $("authPanel").classList.remove("hidden");
    $("manageUsersView").classList.add("hidden"); $("dashboardHome").classList.remove("hidden");
-   $("adminMenu").classList.add("hidden"); return;
+   $("sidebarNav").classList.add("hidden"); $("sideNote").classList.remove("hidden"); return;
   }
   showApp(session.user, await getProfile(session.user));
  }
@@ -124,10 +127,12 @@
   });
   if(!users.length) target.innerHTML='<tr><td colspan="4" class="table-message">No accounts have signed up yet.</td></tr>';
  }
- $("adminMenuToggle").addEventListener("click",()=>{ const items=$("adminMenuItems"), opening=items.classList.contains("hidden"); items.classList.toggle("hidden",!opening); $("adminMenuToggle").setAttribute("aria-expanded",String(opening)); });
- $("adminSubmenuToggle").addEventListener("click",()=>{ const items=$("adminSubmenuItems"), opening=items.classList.contains("hidden"); items.classList.toggle("hidden",!opening); $("adminSubmenuToggle").setAttribute("aria-expanded",String(opening)); });
- $("manageUsersBtn").addEventListener("click",()=>{ showManageUsers(); $("adminMenuItems").classList.add("hidden"); $("adminSubmenuItems").classList.add("hidden"); $("adminMenuToggle").setAttribute("aria-expanded","false"); $("adminSubmenuToggle").setAttribute("aria-expanded","false"); });
- document.querySelectorAll("[data-department]").forEach(button=>button.addEventListener("click",()=>showDepartment(button.dataset.department)));
+ document.querySelectorAll("[data-sidebar-department]").forEach(button=>button.addEventListener("click",()=>{
+  const key=button.dataset.sidebarDepartment; showDepartment(key);
+  document.querySelectorAll("[data-sidebar-department]").forEach(item=>item.classList.toggle("active",item===button));
+ }));
+ $("sidebarManageUsersBtn").addEventListener("click",()=>{showManageUsers();document.querySelectorAll("[data-sidebar-department]").forEach(item=>item.classList.remove("active"));});
+ $("brandHome").addEventListener("click",event=>{event.preventDefault();showHome();document.querySelectorAll("[data-sidebar-department]").forEach(item=>item.classList.remove("active"));});
  $("backToDepartments").addEventListener("click",showHome);
  $("refreshUsersBtn").addEventListener("click",loadUsers);
  $("signInTab").addEventListener("click",()=>setMode("signin"));
