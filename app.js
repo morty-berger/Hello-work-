@@ -4,6 +4,29 @@
  const config = window.HELLO_WORK_CONFIG || {};
  const configured = config.supabaseUrl && config.supabaseAnonKey && !config.supabaseUrl.includes("YOUR_") && !config.supabaseAnonKey.includes("YOUR_");
  if (configured && window.supabase) client = window.supabase.createClient(config.supabaseUrl, config.supabaseAnonKey);
+ let refreshInProgress=false;
+ function triggerAppRefresh(){
+  if(refreshInProgress)return;
+  refreshInProgress=true;
+  document.body.classList.add("is-refreshing");
+  const button=$("appRefreshBtn");
+  if(button){button.disabled=true;button.setAttribute("aria-label","Refreshing Hello Work");button.setAttribute("aria-busy","true");}
+  window.setTimeout(()=>window.location.reload(),450);
+ }
+ $("appRefreshBtn").addEventListener("click",triggerAppRefresh);
+ // Home-screen iPhone web apps may not show Safari's normal refresh control.
+ // Support a gentle pull-down refresh when the page is already at the top.
+ let pullStartY=null;
+ window.addEventListener("touchstart",event=>{
+  if(event.touches.length!==1||window.scrollY>0)return;
+  pullStartY=event.touches[0].clientY;
+ },{passive:true});
+ window.addEventListener("touchend",event=>{
+  if(pullStartY===null)return;
+  const distance=event.changedTouches[0].clientY-pullStartY;
+  if(distance>95&&window.scrollY<=0&&!refreshInProgress)triggerAppRefresh();
+  pullStartY=null;
+ },{passive:true});
  function note(message, type="") { $("notice").textContent = message; $("notice").className = "notice " + type; }
  function setMode(next) {
   mode = next;
