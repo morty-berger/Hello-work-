@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101828"><title>Hello Work</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+</head>
+<body>
+<div class="shell">
+  <aside class="side">
+    <a class="brand" href="#"><span class="brand-icon">h.</span><span>Hello Work<small>YOUR WORKSPACE</small></span></a>
+    <div class="side-note"><span class="spark">✳</span><p>Good work starts with a clear plan.</p><small>One place to get things moving.</small></div>
+    <div class="side-bottom"><span class="status-dot"></span> Your workspace, made simple</div>
+  </aside>
+  <main class="main">
+    <div class="topline"><span class="pill"><span class="tiny-dot"></span> WORKSPACE PORTAL</span><span class="top-caption">Simple. Focused. Together.</span></div>
+    <section id="authPanel" class="auth-wrap">
+      <div class="eyebrow">WELCOME TO HELLO WORK</div>
+      <h1 id="formTitle">Make room for<br><span>great work.</span></h1>
+      <p class="intro" id="formIntro">Sign in to your workspace and pick up right where you left off.</p>
+      <div class="tabs"><button class="tab active" id="signInTab" type="button">Sign in</button><button class="tab" id="signUpTab" type="button">Create account</button></div>
+      <form id="authForm">
+        <label for="email">Email address</label><input id="email" type="email" placeholder="you@company.com" autocomplete="email" required>
+        <label for="password">Password</label><input id="password" type="password" placeholder="At least 8 characters" autocomplete="current-password" minlength="8" required>
+        <button class="primary" id="submitBtn" type="submit">Sign in <span>→</span></button>
+      </form>
+      <button class="text-btn" id="resetBtn" type="button">Forgot your password?</button>
+      <div id="notice" class="notice" role="status" aria-live="polite"></div>
+      <div class="secure"><span>▣</span> Secure account access</div>
+    </section>
+    <section id="appPanel" class="app-panel hidden">
+      <div class="welcome-row"><div><div class="eyebrow">YOUR WORKSPACE</div><h1 id="welcomeTitle">You're in.</h1><p class="intro">Welcome to Hello Work. Your next step starts here.</p></div><button id="signOutBtn" class="outline">Sign out ↗</button></div>
+      <div class="dashboard-grid"><div class="dash-card"><span class="card-icon">✳</span><h3>Stay organized</h3><p>Keep the important things in one place and make progress visible.</p></div><div class="dash-card"><span class="card-icon">↗</span><h3>Move work forward</h3><p>A calm home base for your team, projects, and daily priorities.</p></div></div>
+      <div id="adminPanel" class="admin-card hidden"><div><div class="eyebrow">ADMIN AREA</div><h2>Workspace administration</h2><p>You're signed in with administrator access.</p></div><span class="admin-badge">ADMIN</span><div id="userList" class="user-list"></div></div>
+    </section>
+    <footer><span>© 2026 Hello Work</span><span>Built for better workdays <b>✳</b></span></footer>
+  </main>
+</div>
+<script src="app.js"></script>
+</body></html>
