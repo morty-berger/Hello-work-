@@ -191,3 +191,66 @@ button:focus-visible,a:focus-visible{outline:3px solid #8794ff;outline-offset:3p
  .side-note.hidden{display:none!important}
  .side-bottom{display:none}
 }
+
+
+/* Mobile-first polish: compact header, full-width content, usable nav */
+@media(max-width:720px){
+ html,body{width:100%;min-width:0;overflow-x:hidden}
+ body{min-height:100%;font-size:14px}
+ .shell{display:flex;flex-direction:column;min-height:100svh;width:100%;overflow:clip}
+ .side{position:relative;top:auto;width:100%;min-width:0;min-height:0;height:auto;padding:13px 16px 10px;overflow:visible;flex:0 0 auto}
+ .side:after{display:none}
+ .side .brand{display:flex;gap:10px;align-items:center;margin:0;font-size:17px;line-height:1.1}
+ .brand-icon{width:36px;height:36px;border-radius:11px;font-size:20px;flex:0 0 auto}
+ .brand small{font-size:8px;letter-spacing:1.5px;margin-top:3px}
+ .side-note,.side-bottom{display:none!important}
+ .sidebar-nav{display:flex;flex-direction:row;align-items:center;gap:7px;width:100%;max-width:100%;overflow-x:auto;overflow-y:hidden;margin:11px 0 0;padding:0 0 3px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+ .sidebar-nav::-webkit-scrollbar{display:none}
+ .sidebar-section-label{display:none!important}
+ .sidebar-admin-section{display:contents!important}
+ .sidebar-link{display:inline-flex;align-items:center;justify-content:flex-start;gap:7px;flex:0 0 auto;min-height:40px;width:auto;padding:7px 10px;border:1px solid #e6e9ef;border-radius:10px;background:#fff;color:#475467;font:600 12px "DM Sans",sans-serif;white-space:nowrap}
+ .sidebar-link-icon{width:22px;height:22px;flex:0 0 22px;border-radius:7px;font-size:12px}
+ .main{display:flex;flex-direction:column;flex:1 0 auto;width:100%;min-width:0;min-height:0;padding:16px 16px 18px;overflow-wrap:anywhere}
+ .topline{display:flex;align-items:center;justify-content:flex-start;gap:8px;min-width:0}
+ .pill{font-size:9px;padding:7px 9px;letter-spacing:.8px}
+ .top-caption{display:none}
+ .app-panel{width:100%;max-width:none;min-width:0;margin:0;padding:20px 0 26px}
+ .welcome-row{align-items:center;gap:12px}
+ .welcome-row h1{font-size:clamp(27px,8vw,36px);letter-spacing:-1.2px;margin:8px 0}
+ .welcome-row .intro{font-size:13px;line-height:1.55;margin:0 0 16px}
+ .welcome-row .outline{flex:0 0 auto;padding:10px;font-size:11px}
+ .workspace-intro{margin:12px 0 18px;max-width:100%}
+ .workspace-intro h2,.department-view-heading h2{font-size:27px;line-height:1.15;letter-spacing:-.8px;margin:7px 0}
+ .workspace-intro p,.department-view-heading p{font-size:13px;line-height:1.6;margin:0}
+ .department-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;margin:16px 0}
+ .department-card{display:grid;grid-template-columns:44px minmax(0,1fr);column-gap:12px;align-items:center;min-height:0;width:100%;padding:15px;border-radius:15px}
+ .department-icon{grid-column:1;grid-row:1 / span 3;width:42px;height:42px;margin:0;font-size:20px}
+ .department-label{grid-column:2;grid-row:1;margin:0 0 2px;font-size:8px}
+ .department-card strong{grid-column:2;grid-row:2;font-size:19px;line-height:1.2}
+ .department-description{grid-column:2;grid-row:3;font-size:12px;line-height:1.45;margin-top:4px}
+ .department-link{grid-column:1 / -1;grid-row:4;margin-top:12px;padding-top:10px;border-top:1px solid #eef0f4;font-size:12px}
+ .department-note{font-size:11px;margin:15px 0;line-height:1.5}
+ .department-view{padding:6px 0 22px;min-width:0}
+ .department-view-heading{margin:17px 0}
+ .department-view-heading .intro{margin-top:8px}
+ .department-tools{grid-template-columns:minmax(0,1fr);gap:10px}
+ .department-tool-card{padding:16px;border-radius:14px}
+ .department-tool-card h3{margin:11px 0 5px;font-size:14px}
+ .department-tool-card p{font-size:12px;margin-bottom:14px}
+ .next-step-card{padding:14px;margin-top:12px}
+ .manage-users{min-width:0;width:100%}
+ .section-heading{gap:10px;align-items:flex-start}
+ .section-heading h2{font-size:24px}
+ .section-heading p{font-size:12px;line-height:1.5}
+ .user-table-wrap{width:100%;max-width:100%;overflow-x:auto}
+ .user-table{min-width:0;width:100%}
+ .main footer{margin-top:auto;padding-top:14px;font-size:9px;flex-wrap:wrap}
+}
+@media(max-width:380px){
+ .main{padding-left:12px;padding-right:12px}
+ .side{padding-left:12px;padding-right:12px}
+ .sidebar-link{gap:5px;padding:7px 8px;font-size:11px}
+ .department-card{padding:12px;column-gap:9px}
+ .welcome-row{gap:8px}
+ .welcome-row .outline{padding:9px 8px}
+}
