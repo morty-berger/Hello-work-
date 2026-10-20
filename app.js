@@ -158,6 +158,7 @@
   }
  });
  function closeMobileSidebar(){document.body.classList.remove("mobile-sidebar-open");if($("sidebarToggle")){$("sidebarToggle").setAttribute("aria-expanded","false");$("sidebarToggle").setAttribute("aria-label","Open menu");$("sidebarToggle").querySelector(".sidebar-toggle-label").textContent="Menu";}}
+ $("sidebarClose").addEventListener("click",closeMobileSidebar);
 
  function showManageUsers() {
   $("dashboardHome").classList.add("hidden");
