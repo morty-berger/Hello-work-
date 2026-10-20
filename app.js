@@ -66,7 +66,7 @@
   }
  };
  function showDepartment(key) {
-  if(key==="sales"){showSalesProjects();return;}
+  if(["sales","operations","finance"].includes(key)){showDepartmentProjects(key);return;}
   const dept=departments[key]; if(!dept) return;
   $("dashboardHome").classList.add("hidden");
   $("manageUsersView").classList.add("hidden");
