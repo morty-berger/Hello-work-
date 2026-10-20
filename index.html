@@ -75,6 +75,25 @@
   <div id="projectsNotice" class="projects-notice" role="status" aria-live="polite"></div>
   <div id="salesProjectList" class="sales-project-list"><div class="projects-loading">Loading sales projects…</div></div>
  </section>
+ <section id="salesProjectsView" class="sales-projects-view hidden">
+  <div class="sales-heading"><div><button id="salesBackBtn" class="back-link" type="button">← All departments</button><div class="eyebrow">DEPARTMENT 01 · SALES</div><h2>Sales projects</h2><p>Every opportunity is a project. Move it through the pipeline as it progresses.</p></div><button id="newProjectBtn" class="primary new-project-btn" type="button"><span>＋</span> New project</button></div>
+  <div id="salesStats" class="sales-stats"></div>
+  <div class="sales-toolbar"><label class="sales-search-label" for="projectSearch">Search projects</label><input id="projectSearch" class="project-search" type="search" placeholder="Project or customer name…"><div id="projectFilters" class="project-filters" aria-label="Filter projects by status"></div></div>
+  <form id="newProjectForm" class="new-project-form hidden">
+   <div class="new-project-form-heading"><div><h3>Create a project</h3><p>Start every new opportunity as a lead.</p></div><button id="cancelNewProject" class="icon-button" type="button" aria-label="Cancel">×</button></div>
+   <div class="project-form-grid">
+    <div class="project-field"><label for="projectTitle">Project name *</label><input id="projectTitle" name="title" maxlength="160" placeholder="e.g. 123 Main Street HVAC" required></div>
+    <div class="project-field"><label for="projectCustomer">Customer / company</label><input id="projectCustomer" name="customer" placeholder="Customer or GC name"></div>
+    <div class="project-field"><label for="projectEmail">Contact email</label><input id="projectEmail" name="email" type="email" placeholder="contact@company.com"></div>
+    <div class="project-field"><label for="projectValue">Estimated value ($)</label><input id="projectValue" name="value" type="number" min="0" step="0.01" placeholder="0.00"></div>
+    <div class="project-field project-field-wide"><label for="projectNotes">Notes</label><textarea id="projectNotes" name="notes" rows="3" placeholder="Scope, next steps, bid date, or other details"></textarea></div>
+   </div>
+   <p id="projectFormNotice" class="project-form-notice" role="status"></p>
+   <div class="project-form-actions"><button id="cancelNewProjectBottom" class="outline" type="button">Cancel</button><button id="saveNewProject" class="primary" type="submit">Create lead <span>→</span></button></div>
+  </form>
+  <div id="projectsNotice" class="projects-notice" role="status" aria-live="polite"></div>
+  <div id="salesProjectList" class="sales-project-list"><div class="projects-loading">Loading sales projects…</div></div>
+ </section>
  <section id="manageUsersView" class="manage-users hidden"><div class="section-heading"><div><div class="eyebrow">ADMIN / USERS</div><h2>Manage users</h2><p>Everyone who has created a Hello Work account.</p></div><button id="refreshUsersBtn" class="outline" type="button">↻ Refresh</button></div><div class="user-summary"><span class="summary-icon">♙</span><div><strong id="userCount">—</strong><span>Registered users</span></div></div><div class="user-table-wrap"><table class="user-table"><thead><tr><th>User</th><th>Email</th><th>Role</th><th>Joined</th></tr></thead><tbody id="userTableBody"><tr><td colspan="4" class="table-message">Sign in as an administrator to view users.</td></tr></tbody></table></div><p id="usersNotice" class="users-notice" role="status" aria-live="polite"></p></section>
     </section>
     <footer><span>© 2026 Hello Work</span><span>Built for better workdays <b>✳</b></span></footer>
