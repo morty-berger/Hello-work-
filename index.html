@@ -5,15 +5,22 @@
 <meta name="theme-color" content="#101828"><title>Hello Work</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=4">
+<link rel="stylesheet" href="styles.css?v=5">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
 </head>
 <body>
 <div class="shell">
-  <aside class="side">
-    <a class="brand" href="#"><span class="brand-icon">h.</span><span>Hello Work<small>YOUR WORKSPACE</small></span></a>
-    <div class="side-note"><span class="spark">✳</span><p>Good work starts with a clear plan.</p><small>One place to get things moving.</small></div>
+  <aside class="side" id="appSidebar">
+    <a class="brand" href="#" id="brandHome"><span class="brand-icon">h.</span><span>Hello Work<small>YOUR WORKSPACE</small></span></a>
+    <nav id="sidebarNav" class="sidebar-nav hidden" aria-label="Workspace navigation">
+      <div class="sidebar-section-label">WORKSPACE</div>
+      <button class="sidebar-link" type="button" data-sidebar-department="sales"><span class="sidebar-link-icon sales-icon">↗</span><span>Sales</span></button>
+      <button class="sidebar-link" type="button" data-sidebar-department="operations"><span class="sidebar-link-icon operations-icon">◈</span><span>Operations</span></button>
+      <button class="sidebar-link" type="button" data-sidebar-department="finance"><span class="sidebar-link-icon finance-icon">$</span><span>Finance</span></button>
+      <div id="sidebarAdminSection" class="sidebar-admin-section hidden"><div class="sidebar-section-label">ADMIN</div><button id="sidebarManageUsersBtn" class="sidebar-link" type="button"><span class="sidebar-link-icon admin-icon">♙</span><span>Manage users</span></button></div>
+    </nav>
+    <div id="sideNote" class="side-note"><span class="spark">✳</span><p>Good work starts with a clear plan.</p><small>One place to get things moving.</small></div>
     <div class="side-bottom"><span class="status-dot"></span> Your workspace, made simple</div>
   </aside>
   <main class="main">
@@ -34,7 +41,7 @@
     </section>
     <section id="appPanel" class="app-panel hidden">
       <div class="welcome-row"><div><div class="eyebrow">YOUR WORKSPACE</div><h1 id="welcomeTitle">You're in.</h1><p class="intro">Welcome to Hello Work. Your next step starts here.</p></div><button id="signOutBtn" class="outline">Sign out ↗</button></div>
-      <nav id="adminMenu" class="admin-menu hidden" aria-label="Main menu"><button id="adminMenuToggle" class="admin-menu-toggle" type="button" aria-expanded="false"><span class="menu-symbol">☰</span><span>Menu</span><span class="menu-chevron">⌃</span></button><div id="adminMenuItems" class="admin-menu-items hidden"><button id="adminSubmenuToggle" class="admin-menu-item admin-submenu-toggle" type="button" aria-expanded="false"><span>⚙</span> Admin <span class="menu-arrow">⌄</span></button><div id="adminSubmenuItems" class="admin-submenu-items hidden"><button id="manageUsersBtn" class="admin-menu-item" type="button"><span>♙</span> Manage users <span class="menu-arrow">→</span></button></div></div></nav><section id="dashboardHome">
+<section id="dashboardHome">
   <div class="workspace-intro"><div class="eyebrow">YOUR WORKSPACE</div><h2>Where do you want to focus?</h2><p>Choose a department to open its workspace. Each area will grow around the way your team works.</p></div>
   <div class="department-grid">
    <button class="department-card sales-card" type="button" data-department="sales"><span class="department-icon">↗</span><span class="department-label">DEPARTMENT 01</span><strong>Sales</strong><span class="department-description">Leads, opportunities, bids and follow-ups.</span><span class="department-link">Open Sales <span>→</span></span></button>
@@ -53,5 +60,5 @@
     <footer><span>© 2026 Hello Work</span><span>Built for better workdays <b>✳</b></span></footer>
   </main>
 </div>
-<script src="app.js?v=4"></script>
+<script src="app.js?v=5"></script>
 </body></html>
