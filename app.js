@@ -74,7 +74,9 @@
    row.append(userCell,emailCell,roleCell,joinedCell); target.append(row);
   });
   if(!users.length) target.innerHTML='<tr><td colspan="4" class="table-message">No accounts have signed up yet.</td></tr>';
- } $("adminMenuToggle").addEventListener("click",()=>{ const items=$("adminMenuItems"), opening=items.classList.contains("hidden"); items.classList.toggle("hidden",!opening); $("adminMenuToggle").setAttribute("aria-expanded",String(opening)); });
+ }
+ $("adminMenuToggle").addEventListener("click",()=>{ const items=$("adminMenuItems"), opening=items.classList.contains("hidden"); items.classList.toggle("hidden",!opening); $("adminMenuToggle").setAttribute("aria-expanded",String(opening)); });
+ $("adminSubmenuToggle").addEventListener("click",()=>{ const items=$("adminSubmenuItems"), opening=items.classList.contains("hidden"); items.classList.toggle("hidden",!opening); $("adminSubmenuToggle").setAttribute("aria-expanded",String(opening)); });
  $("manageUsersBtn").addEventListener("click",showManageUsers);
  $("refreshUsersBtn").addEventListener("click",loadUsers);
  $("signInTab").addEventListener("click",()=>setMode("signin"));
